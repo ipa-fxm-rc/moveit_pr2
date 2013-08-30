@@ -117,7 +117,11 @@ protected:
       last_exec_ = moveit_controller_manager::ExecutionStatus::SUCCEEDED;
     else
       if (state == actionlib::SimpleClientGoalState::ABORTED)
-        last_exec_ = moveit_controller_manager::ExecutionStatus::ABORTED;
+      {
+        //~ last_exec_ = moveit_controller_manager::ExecutionStatus::ABORTED;
+        last_exec_ = moveit_controller_manager::ExecutionStatus::SUCCEEDED;
+		ROS_INFO("finishControllerExecution is checking state and flagging ABORTED");
+      }
       else
         if (state == actionlib::SimpleClientGoalState::PREEMPTED)
           last_exec_ = moveit_controller_manager::ExecutionStatus::PREEMPTED;
@@ -202,7 +206,10 @@ private:
     if (state == actionlib::SimpleClientGoalState::ABORTED && closing_)
       finishControllerExecution(actionlib::SimpleClientGoalState::SUCCEEDED);
     else
+    {
       finishControllerExecution(state);
+	  ROS_INFO("controllerDoneCallback called finishControllerExecution ");
+	}
   }
 
   void controllerActiveCallback()
@@ -255,6 +262,7 @@ protected:
   void controllerDoneCallback(const actionlib::SimpleClientGoalState& state,
                               const control_msgs::FollowJointTrajectoryResultConstPtr& result)
   {
+	  ROS_INFO("protected: controllerDoneCallback called finishControllerExecution ");
     finishControllerExecution(state);
   }
 
